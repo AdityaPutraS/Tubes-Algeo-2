@@ -6,7 +6,11 @@ from config import *
 from transformasi import *
 
 
-test = np.mat([[0,0,1],[100,0,1],[100,100,1]])
+test = np.mat([[0,0,1],[100,0,1],[100,100,1],[0,100,1]])
+keyframe = 0
+polygonTemp = test
+matrixAnimasi = 0
+animasi = False
 
 def interpolate(awal,akhir,persen):
     #interpolate berguna untuk mereturn hasil interpolasi nilai dari awal
@@ -15,24 +19,32 @@ def interpolate(awal,akhir,persen):
     return awal + (akhir-awal)*persen
 
 def refresh2d(width, height):
-    glViewport(0,0, width, height)
+    glViewport(0, 0, width, height)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    glOrtho(0, width, 0, height, 0.0, 1.0)
+    glOrtho(0.0, width, 0.0, height, 0.0, 1.0)
     glMatrixMode (GL_MODELVIEW)
     glLoadIdentity()
 
 def on_keyPressed(key,mouseX,mouseY):
     #TODO : Handle keypress di GUI
-    global test    
+    global matrixAnimasi,animasi,keyframe,polygonTemp
     if(key == b'w'):
-        test = transformPolygon(test,translate(0,50))
+        animasi = True
+        keyframe = 0
+        matrixAnimasi = translate(0,100/30)
     elif(key == b'd'):
-        test = transformPolygon(test,translate(50,0))
+        animasi = True
+        keyframe = 0
+        matrixAnimasi = translate(100/30,0)
     elif(key == b'a'):
-        test = transformPolygon(test,translate(-50,0))
+        animasi = True
+        keyframe = 0
+        matrixAnimasi = translate(-100/30,0)
     elif(key == b's'):
-        test = transformPolygon(test,translate(0,-50))
+        animasi = True
+        keyframe = 0
+        matrixAnimasi = translate(0,-100/30)
 
 def gambarPolygon(listOfVertex, is3D):
     glBegin(GL_POLYGON)
@@ -51,8 +63,16 @@ def draw():
     glLoadIdentity()
     refresh2d(width,height)
     glColor3f(0.0, 0.0, 1.0)
-    glLineWidth(2)
     #Gambar disini
+    global test,animasi,keyframe,polygonTemp
+    if(animasi):
+        if(keyframe == 31):
+            animasi = False
+            keyframe = 0
+        else:
+            test = transformPolygon(test,matrixAnimasi)
+            keyframe += 1
     gambarPolygon(test,False)
+    print(test)
     #Sampe sini
     glutSwapBuffers()
