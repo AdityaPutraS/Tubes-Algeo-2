@@ -1,5 +1,6 @@
-from render import draw2d, on_keyPressed
+from render import draw2d
 from bentuk import objek
+import handler
 from OpenGL.GLUT import glutInit, glutInitDisplayMode, glutInitWindowSize, glutCreateWindow
 from OpenGL.GLUT import glutInitWindowPosition, glutKeyboardFunc, glutDisplayFunc, glutIdleFunc, glutMainLoop
 from OpenGL.GLUT import GLUT_RGBA, GLUT_DOUBLE, GLUT_ALPHA, GLUT_DEPTH
@@ -28,14 +29,17 @@ def getInput():
 
 
 if(__name__ == "__main__"):
+    #MultiThreading Boi
     procInput = threading.Thread(target=getInput)
     procInput.start()
+    #GUI
     glutInit()
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
     glutInitWindowSize(config.width, config.height)
     glutInitWindowPosition(0, 0)
     window = glutCreateWindow("Tubes Algeo 2")
-    glutKeyboardFunc(on_keyPressed)
+    #Event Handler & Draw function
+    glutKeyboardFunc(handler.on_keyPressed)
     glutDisplayFunc(draw2d)
     glutIdleFunc(draw2d)
     glutMainLoop()
