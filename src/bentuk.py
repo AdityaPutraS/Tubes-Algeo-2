@@ -2,7 +2,6 @@ import numpy as np
 from animasi import animasi
 import OpenGL.GL as gl
 
-
 def lingkaran(x, y, r):
     hasil = []
     for i in range(0, 360):
@@ -26,10 +25,18 @@ def gambarPolygon(listOfVertex, is3D, r, g, b):
 
 
 class objek:
+    # Default Value
+    listVertex2D = [np.mat([-1, -1, 1]), np.mat([1, -1, 1]),
+                    np.mat([1, 1, 1]), np.mat([-1, 1, 1])]
+    listVertex3D = [np.mat([-1, -1, 1, 1]), np.mat([1, -1, 1, 1]), np.mat([1, -1, -1, 1]), np.mat([-1, -1, -1, 1]),
+                    np.mat([-1, 1, -1, 1]), np.mat([-1, 1, 1, 1]), np.mat([1, 1, 1, 1]), np.mat([1, 1, -1, 1])]
 
-    def __init__(self, listVertex=[], is3D=False, r=0, g=255, b=0):
-        self.listVertex = listVertex
+    def __init__(self, is3D=False, listVertex=[], r=0, g=255, b=0):
         self.is3D = is3D
+        if(is3D):
+            self.listVertex = objek.listVertex3D
+        else:
+            self.listVertex = objek.listVertex2D
         self.animator = animasi()
         self.r, self.g, self.b = r, g, b
 
