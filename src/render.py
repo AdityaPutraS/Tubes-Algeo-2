@@ -1,78 +1,101 @@
 from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GLUT import *
-
+from OpenGL.GLUT import glutSwapBuffers
+import numpy as np
 from config import *
+from bentuk import objek
 from transformasi import *
 
+test = [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]]
+test = [np.mat([x]) for x in test]
+startGambar = False
+r, g, b = 0, 1.0, 0
 
-test = np.mat([[0,0,1],[100,0,1],[100,100,1],[0,100,1]])
-keyframe = 0
-polygonTemp = test
-matrixAnimasi = 0
-animasi = False
-
-def interpolate(awal,akhir,persen):
-    #interpolate berguna untuk mereturn hasil interpolasi nilai dari awal
-    #hingga akhir saat sudah sejauh brp persen
-    #interpolate(0,10,0.5) = 5
-    return awal + (akhir-awal)*persen
+objTest = objek(test,False)
 
 def refresh2d(width, height):
     glViewport(0, 0, width, height)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    glOrtho(0.0, width, 0.0, height, 0.0, 1.0)
-    glMatrixMode (GL_MODELVIEW)
+
+    glOrtho(curMinX, curMaxX, curMinY, curMaxY, 0, 1)
+    glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
-def on_keyPressed(key,mouseX,mouseY):
-    #TODO : Handle keypress di GUI
-    global matrixAnimasi,animasi,keyframe,polygonTemp
-    if(key == b'w'):
-        animasi = True
-        keyframe = 0
-        matrixAnimasi = translate(0,100/30)
-    elif(key == b'd'):
-        animasi = True
-        keyframe = 0
-        matrixAnimasi = translate(100/30,0)
-    elif(key == b'a'):
-        animasi = True
-        keyframe = 0
-        matrixAnimasi = translate(-100/30,0)
-    elif(key == b's'):
-        animasi = True
-        keyframe = 0
-        matrixAnimasi = translate(0,-100/30)
 
-def gambarPolygon(listOfVertex, is3D):
-    glBegin(GL_POLYGON)
-    if(is3D):
-        #Handle untuk 3D
-        for v in listOfVertex:
-            glVertex3f(v.item(0),v.item(1),v.item(2))
-    else:
-        #Handle untuk 2D
-        for v in listOfVertex:
-            glVertex2f(v.item(0),v.item(1))
+def on_keyPressed(key, mouseX, mouseY):
+    print(key)
+    global curMaxX,curMinX,curMaxY,curMinY
+    global navX,navY,navZ,navZoom
+
+    if(key == b'd'):
+        curMaxX += navX
+        curMinX += navX
+        if(curMaxX > maxX):
+            curMinX -= (curMaxX-maxX)
+            curMaxX = maxX
+    elif(key == b'a'):
+        curMaxX -= navX
+        curMinX -= navX
+        if(curMinX < minX):
+            curMaxX -= (minX-curMinX)
+            curMinX = minX
+    elif(key == b'w'):
+        curMaxY += navY
+        curMinY += navY
+        if(curMaxY > maxY):
+            curMinX -= (curMaxY-maxY)
+            curMaxY = maxY
+    elif(key == b's'):
+        curMaxY -= navY
+        curMinY -= navY
+        if(curMinY < minY):
+            curMaxY -= (minY-curMinY)
+            curMinY = minY
+    elif(key == b'q'):
+        #Zoom in
+        curMinX += navZoom
+        curMaxX -= navZoom
+        curMinY += navZoom
+        curMaxY -= navZoom
+    elif(key == b'e'):
+        #Zoom out
+        curMinX -= navZoom
+        curMaxX += navZoom
+        curMinY -= navZoom
+        curMaxY += navZoom
+    elif(key == b'8'):
+        #Translasi ke atas
+        objTest.animator.startAnimasi(translate(0,5/30))
+    elif(key == b'2'):
+        #Translasi ke atas
+        objTest.animator.startAnimasi(translate(0,-5/30))
+    elif(key == b'4'):
+        #Translasi ke atas
+        objTest.animator.startAnimasi(translate(-5/30,0))
+    elif(key == b'6'):
+        #Translasi ke atas
+        objTest.animator.startAnimasi(translate(5/30,0))
+
+def garis(startX,startY,startZ,finishX,finishY,finishZ):
+    glBegin(GL_LINES)
+    glVertex3f(startX,startY,startZ)
+    glVertex3f(finishX,finishY,finishZ)
     glEnd()
-    
-def draw():
+
+def gambarSumbu(is3D):
+    if(is3D):
+        pass
+    else:
+        glColor3f(255,255,255)
+        garis(curMinX,0,0,curMaxX,0,0)
+        garis(0,curMinY,0,0,curMaxY,0)
+
+def draw2d():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    refresh2d(width,height)
-    glColor3f(0.0, 0.0, 1.0)
-    #Gambar disini
-    global test,animasi,keyframe,polygonTemp
-    if(animasi):
-        if(keyframe == 31):
-            animasi = False
-            keyframe = 0
-        else:
-            test = transformPolygon(test,matrixAnimasi)
-            keyframe += 1
-    gambarPolygon(test,False)
-    print(test)
-    #Sampe sini
+    refresh2d(width, height)
+    gambarSumbu(False)
+    objTest.gambar()
+
+    # Sampe sini
     glutSwapBuffers()
