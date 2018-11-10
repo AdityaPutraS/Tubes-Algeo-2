@@ -5,8 +5,7 @@ def on_keyPressed(key, mouseX, mouseY):
 
     if(key == b'd'):
         if(config.is3D):
-            config.camX3D += config.navX
-            config.putarCamY(30)
+            config.putarCamY(-config.navPutar)
         else:
             config.curMaxX += config.navX
             config.curMinX += config.navX
@@ -15,7 +14,7 @@ def on_keyPressed(key, mouseX, mouseY):
                 config.curMaxX = config.maxX
     elif(key == b'a'):
         if(config.is3D):
-            config.camX3D -= config.navX
+            config.putarCamY(config.navPutar)
         else:
             config.curMaxX -= config.navX
             config.curMinX -= config.navX
@@ -24,7 +23,7 @@ def on_keyPressed(key, mouseX, mouseY):
                 config.curMinX = config.minX
     elif(key == b'w'):
         if(config.is3D):
-            config.camY3D += config.navY
+            config.putarCam(config.navPutar,config.tegakLurusCam3D.item(0),config.tegakLurusCam3D.item(1),config.tegakLurusCam3D.item(2))
         else:
             config.curMaxY += config.navY
             config.curMinY += config.navY
@@ -33,7 +32,7 @@ def on_keyPressed(key, mouseX, mouseY):
                 config.curMaxY = config.maxY
     elif(key == b's'):
         if(config.is3D):
-            config.camY3D -= config.navY
+            config.putarCam(-config.navPutar,config.tegakLurusCam3D.item(0),config.tegakLurusCam3D.item(1),config.tegakLurusCam3D.item(2))
         else:
             config.curMaxY -= config.navY
             config.curMinY -= config.navY
@@ -60,13 +59,13 @@ def on_keyPressed(key, mouseX, mouseY):
             config.curMaxY += config.navZoom
     elif(key == b'8'):
         # Translasi ke atas
-        config.objTest.animator.startAnimasi(translate(0, 5/30,0,config.is3D))
+        config.objTest.animator.startAnimasi(translate(0, 5/config.maxKeyFrame,0))
     elif(key == b'2'):
         # Translasi ke atas
-        config.objTest.animator.startAnimasi(translate(0, -5/30,0,config.is3D))
+        config.objTest.animator.startAnimasi(translate(0, -5/config.maxKeyFrame,0))
     elif(key == b'4'):
         # Translasi ke atas
-        config.objTest.animator.startAnimasi(translate(-5/30, 0,0,config.is3D))
+        config.objTest.animator.startAnimasi(translate(-5/config.maxKeyFrame, 0,0))
     elif(key == b'6'):
         # Translasi ke atas
-        config.objTest.animator.startAnimasi(translate(5/30, 0,0,config.is3D))
+        config.objTest.animator.startAnimasi(translate(5/config.maxKeyFrame, 0,0))

@@ -34,8 +34,8 @@ def gambarPolygon(listOfVertex, is3D,warnaKubus=[],listOfTriangle=[]):
 
 class objek:
     # Default Value
-    listVertex2D = [np.mat([-1, -1, 1]), np.mat([1, -1, 1]),
-                    np.mat([1, 1, 1]), np.mat([-1, 1, 1])]
+    listVertex2D = [np.mat([-1, -1,0, 1]), np.mat([1, -1,0, 1]),
+                    np.mat([1, 1,0, 1]), np.mat([-1, 1,0, 1])]
     listVertex3D = [np.mat([-1, -1, 1, 1]), np.mat([1, -1, 1, 1]), np.mat([1, -1, -1, 1]), np.mat([-1, -1, -1, 1]),
                     np.mat([-1, 1, -1, 1]), np.mat([-1, 1, 1, 1]), np.mat([1, 1, 1, 1]), np.mat([1, 1, -1, 1])]
     listSegitiga3D = [(0,1,2),(0,2,3),(0,1,6),(0,5,6),(1,2,7),(1,6,7),(2,7,4),(2,3,4),(0,3,4),(0,5,4),(4,5,6),(4,6,7)]

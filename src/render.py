@@ -5,6 +5,7 @@ import numpy as np
 from config import config
 from transformasi import *
 
+
 def refresh2d():
     glViewport(0, 0, config.width, config.height)
     glMatrixMode(GL_PROJECTION)
@@ -12,7 +13,8 @@ def refresh2d():
     glOrtho(config.curMinX, config.curMaxX,
             config.curMinY, config.curMaxY, -10, 10)
     glMatrixMode(GL_MODELVIEW)
-    gluLookAt(config.camX2D, config.camY2D, config.camZ2D,0, 0, 0, 1, 0)
+    gluLookAt(config.camX2D, config.camY2D, config.camZ2D, 0, 0, 0, 0, 1, 0)
+
 
 def refresh3d():
     glViewport(0, 0, config.width, config.height)
@@ -21,7 +23,8 @@ def refresh3d():
     glOrtho(config.curMinX, config.curMaxX,
             config.curMinY, config.curMaxY, -100, 100)
     glMatrixMode(GL_MODELVIEW)
-    gluLookAt(config.camX3D, config.camY3D, config.camZ3D, 0, 0, 0, 0, 1, 0)
+    gluLookAt(config.vecCam3D.item(0), config.vecCam3D.item(
+        1), config.vecCam3D.item(2), 0, 0, 0, 0, 1, 0)
 
 
 def garis(startX, startY, startZ, finishX, finishY, finishZ):
@@ -56,7 +59,7 @@ def gambarSumbu(is3D):
 
 
 def gambarGrid(is3D):
-    xy,xz,yz = config.xy,config.xz,config.yz
+    xy, xz, yz = config.xy, config.xz, config.yz
     if(is3D):
         dX = config.curMaxX-config.curMinX
         dY = config.curMaxY-config.curMinY
@@ -64,31 +67,45 @@ def gambarGrid(is3D):
         gridX, gridY, gridZ = np.ceil(dX/10), np.ceil(dY/10), np.ceil(dZ/10)
 
         for i in range(6):
+            # XY
+            '''
             glColor3f(xy[0],xy[1],xy[2])
             garis(config.curMinX, i*gridY, 0, config.curMaxX, i*gridY, 0)
             garis(config.curMinX, -i*gridY, 0, config.curMaxX, -i*gridY, 0)
+            '''
 
-            glColor3f(xz[0],xz[1],xz[2])
+            # XZ
+            glColor3f(xz[0], xz[1], xz[2])
             garis(config.curMinX, 0, i*gridZ, config.curMaxX, 0, i*gridZ)
             garis(config.curMinX, 0, -i*gridZ, config.curMaxX, 0, -i*gridZ)
         for i in range(6):
+            # XY
+            '''
             glColor3f(xy[0],xy[1],xy[2])
             garis(i*gridX, config.curMinY, 0, i*gridX, config.curMaxY, 0)
             garis(-i*gridX, config.curMinY, 0, -i*gridX, config.curMaxY, 0)
+            '''
 
+            # YZ
+            '''
             glColor3f(yz[0],yz[1],yz[2])
             garis(0, config.curMinY, i*gridZ, 0, config.curMaxY, i*gridZ)
             garis(0, config.curMinY, -i*gridZ, 0, config.curMaxY, -i*gridZ)
+            '''
         for i in range(6):
-            glColor3f(xz[0],xz[1],xz[2])
+            # XZ
+            glColor3f(xz[0], xz[1], xz[2])
             garis(i*gridX, 0, config.curMinZ, i*gridX, 0, config.curMaxZ)
             garis(-i*gridX, 0, config.curMinZ, -i*gridX, 0, config.curMaxZ)
 
+            # YZ
+            '''
             glColor3f(yz[0],yz[1],yz[2])
             garis(0, i*gridY, config.curMinZ, 0, i*gridY, config.curMaxZ)
             garis(0, -i*gridY, config.curMinZ, 0, -i*gridY, config.curMaxZ)
+            '''
     else:
-        glColor3f(xy[0],xy[1],xy[2])
+        glColor3f(xy[0], xy[1], xy[2])
         dX = config.curMaxX-config.curMinX
         dY = config.curMaxY-config.curMinY
         gridX, gridY = np.ceil(dX/10), np.ceil(dY/10)
@@ -98,9 +115,10 @@ def gambarGrid(is3D):
         for i in range(10):
             garis(i*gridX, config.curMinY, 0, i*gridX, config.curMaxY, 0)
             garis(-i*gridX, config.curMinY, 0, -i*gridX, config.curMaxY, 0)
-    glColor3f(1,1,1)
+    glColor3f(1, 1, 1)
 
-def draw2d():
+
+def draw():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     if(config.is3D):
@@ -111,6 +129,5 @@ def draw2d():
     config.objTest.gambar()
     gambarGrid(config.is3D)
     gambarSumbu(config.is3D)
-
     # Sampe sini
     glutSwapBuffers()
