@@ -1,6 +1,6 @@
 from config import config
 from transformasi import *
-
+from OpenGL.GLUT import glutLeaveMainLoop
 maxKeyFrame = config.maxKeyFrame
 
 
@@ -21,11 +21,11 @@ def SingleInput(s, is3D):
             if (is3D):
                 dz = float(s[3])
                 print("translasi sebanyak ("+str(dx)+","+str(dy)+","+str(dz)+")")
-                config.objTest.animator.startAnimasi(
-                    translate(dx/maxKeyFrame, dy/maxKeyFrame, dz/maxKeyFrame))
+                config.objTest.animator.pushAnimasi(
+                    [translate(dx/maxKeyFrame, dy/maxKeyFrame, dz/maxKeyFrame),False])
             else:
                 print("translasi sebanyak ("+str(dx)+","+str(dy)+")")
-                config.objTest.animator.startAnimasi(translate(dx/maxKeyFrame, dy/maxKeyFrame))
+                config.objTest.animator.pushAnimasi([translate(dx/maxKeyFrame, dy/maxKeyFrame),False])
             # fungsi prosedur translate
     elif (s[0] == "rotate"):
         if (len(s) != 4 and not(is3D)):
@@ -44,11 +44,11 @@ def SingleInput(s, is3D):
                 dz = float(s[4])
                 print("rotasi sebesar "+str(degree) +
                       " derajat dengan sumbu putar vektor <"+str(dx)+","+str(dy)+","+str(dz)+">")
-                config.objTest.animator.startAnimasi(rotasi(degree/maxKeyFrame,dx,dy,dz))
+                config.objTest.animator.pushAnimasi([rotasi(degree/maxKeyFrame,dx,dy,dz),False])
             else:
                 print("rotasi sebesar "+str(degree) +
                       " derajat dari pusat ("+str(dx)+","+str(dy)+")")
-                config.objTest.animator.startAnimasi(translate(-dx,-dy)*rotasi(degree/maxKeyFrame,0,0,1)*translate(dx,dy))
+                config.objTest.animator.pushAnimasi([translate(-dx,-dy)*rotasi(degree/maxKeyFrame,0,0,1)*translate(dx,dy),False])
             # fungsi prosedur rotate
     elif (s[0] == "dilate"):
         if (len(s) != 2):
@@ -56,31 +56,48 @@ def SingleInput(s, is3D):
         else:
             ratio = float(s[1])
             print("dilatasi dengan rasio "+str(ratio)+":1")
-            config.objTest.animator.startAnimasi(dilate((ratio**(1/maxKeyFrame))))
+            config.objTest.animator.pushAnimasi([dilate((ratio**(1/maxKeyFrame))),False])
             # fungsi prosedur dilate
     elif (s[0] == "reflect"):
-        if (len(s) != 2):
+        if (len(s) != 2 and len(s) != 3):
             print("Input Salah!")
         else:
-            param = str(s[1])
-            print("refleksi berdasarkan garis "+param)
+            param = s[1]
+            if(len(s) == 3):
+                #Refleksi terhadap titik (a,b)
+                param = int(param)
+                param2 = int(s[2])
+                print("refleksi berdasarkan titik ("+s[1]+","+s[2]+")")
+                config.objTest.animator.pushAnimasi([reflect(param,param2),True])
+            else:
+                print("refleksi berdasarkan garis "+param)
+                if(is3D):
+                    config.objTest.animator.pushAnimasi([reflect3D(param),True])
+                else:
+                    config.objTest.animator.pushAnimasi([reflect(param),True])
             # fungsi prosedur reflect
     elif (s[0] == "shear"):
         if (len(s) != 3):
             print("Input Salah!")
         else:
-            param = str(s[1])
+            param = s[1]
             k = float(s[2])
             print("shear dgn parameter "+param+" dengan konstanta "+str(k))
-            # fungsi prosedur shear
+            if(config.is3D):
+                config.objTest.animator.pushAnimasi([shear3D(param,k/maxKeyFrame),False])
+            else:
+                config.objTest.animator.pushAnimasi([shear(param,k/maxKeyFrame),False])
     elif (s[0] == "stretch"):
         if (len(s) != 3):
             print("Input Salah!")
-        else:
+        else:   
             param = str(s[1])
             k = float(s[2])
             print("stretch dgn parameter "+param+" dengan konstanta "+str(k))
-            # fungsi prosedur stretch
+            if(config.is3D):
+                config.objTest.animator.pushAnimasi([stretch3D(param,k**(1/maxKeyFrame)),False])
+            else:
+                config.objTest.animator.pushAnimasi([stretch(param,k**(1/maxKeyFrame)),False])
     elif (s[0] == "custom"):
         if (len(s) != 5 and not(is3D)):
             if (len(s) == 10):
@@ -100,10 +117,12 @@ def SingleInput(s, is3D):
                 print(a, b, c)
                 print(d, e, f)
                 print(g, h, i)
+                config.objTest.animator.pushAnimasi([custom3D(a,b,c,d,e,f,g,h,i),True])
             else:
                 print("transformasi custom dengan matrix :")
                 print(a, b)
                 print(c, d)
+                config.objTest.animator.pushAnimasi([custom(a,b,c,d),True])
             # fungsi prosedur custom
     elif (s[0] == "reset"):
         config.curMinX, config.curMaxX, config.curMinY, config.curMaxY, config.curMinZ, config.curMaxZ = - \
@@ -116,6 +135,14 @@ def SingleInput(s, is3D):
 
 
 def ProcInput(is3D):
+    if(not(is3D)):
+        #Baca koordinat 2d
+        banyakKoordinat = int(input("Banyak koordinat 2D : "))
+        listVertexInput = []
+        for i in range(banyakKoordinat):
+            inp = input("Koordinat "+str(i)+" : ").split(" ")
+            listVertexInput.append(np.mat([[float(inp[0]),float(inp[1]),0,1]]))
+        config.initAwal(is3D,listVertexInput,False)
     s = input("$ ").split(" ")
     while (s[0] != "exit"):
         if (s[0] == "multiple"):
@@ -132,8 +159,9 @@ def ProcInput(is3D):
                         break
                     # endif
                 # endforloop
-                for command in listCommand:
-                    SingleInput(command,is3D)
+                if ((s2[0] != "exit") and (s2[0] != "exitmultiple")):
+                    for command in listCommand:
+                        SingleInput(command,is3D)
                 print("Keluar dari perintah multiple")
             # endif
         else:
@@ -142,4 +170,5 @@ def ProcInput(is3D):
         s = input("$ ").split(" ")
     # endwhile
     config.jalan = False
+    glutLeaveMainLoop()
 # end ProcInput procedure

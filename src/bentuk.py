@@ -40,12 +40,15 @@ class objek:
                     np.mat([-1, 1, -1, 1]), np.mat([-1, 1, 1, 1]), np.mat([1, 1, 1, 1]), np.mat([1, 1, -1, 1])]
     listSegitiga3D = [(0,1,2),(0,2,3),(0,1,6),(0,5,6),(1,2,7),(1,6,7),(2,7,4),(2,3,4),(0,3,4),(0,5,4),(4,5,6),(4,6,7)]
 
-    def __init__(self, is3D=False, listVertex=[]):
+    def __init__(self, is3D=False, listVertex=[],default=True):
         self.is3D = is3D   
-        if(is3D):
-            self.listVertex = objek.listVertex3D
+        if(default):
+            if(is3D):
+                self.listVertex = objek.listVertex3D
+            else:
+                self.listVertex = objek.listVertex2D
         else:
-            self.listVertex = objek.listVertex2D
+            self.listVertex = listVertex
         self.animator = animasi()
         #Generate Warna
         self.warnaKubus = []

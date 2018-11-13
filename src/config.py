@@ -35,15 +35,17 @@ class config:
     #Default Object
     objTest = bentuk.objek(is3D)
     listOfVertex = []
+    default = True
     def initAwal(is3D,listOfVertex=[],default=True):
         config.is3D = is3D
         config.listOfVertex = listOfVertex
-        config.objTest = bentuk.objek(is3D)
+        config.default = default
+        config.objTest = bentuk.objek(is3D,listOfVertex,default)
 
     def reset():
         config.vecCam3D = np.mat([[config.camX3D,config.camY3D,config.camZ3D,1]])
         config.tegakLurusCam3D = np.mat([[config.camX3D,0,config.camZ3D,1]]) * rotasiY(90)
-        config.objTest = bentuk.objek(config.is3D)
+        config.objTest = bentuk.objek(config.is3D,config.listOfVertex,config.default)
 
     def putarCamY(derajat):
         #Memutar vector kamera 3D dengan sb Y positif sebagai pusat

@@ -3,7 +3,7 @@ import math
 
 
 def translate(dx, dy, dz=0):
-    return np.mat([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [dx, dy, dz, 1]])
+    return np.mat([[1, 0.0, 0, 0], [0, 1, 0.0, 0], [0, 0.0, 1, 0], [dx, dy, dz, 1]])
 
 
 def rotasi(deg, a=0, b=0, c=0):  # degree berlawan arah jarum jam terhadap titik(a,b)
@@ -23,7 +23,7 @@ def rotasi(deg, a=0, b=0, c=0):  # degree berlawan arah jarum jam terhadap titik
               (1-cosDeg), b*c*(1-cosDeg)-a*sinDeg, 0]
     baris3 = [c*a*(1-cosDeg)-b*sinDeg, c*b*(1-cosDeg) +
               a*sinDeg, cosDeg+c*c*(1-cosDeg), 0]
-    baris4 = [0, 0, 0, 1]
+    baris4 = [0, 0.0, 0, 1]
     return np.mat([baris1, baris2, baris3, baris4])
     # return np.mat([math.cos(deg),math.sin(deg),0],[-1*math.sin(deg),math.cos(deg),0],[-1*a*math.cos(deg)+b*math.sin(deg)+m,-1*a*math.sin(deg)-b*math.cos(deg)+n,1])
 
@@ -37,7 +37,7 @@ def rotasiX(deg):
     # 0 -sin cos 0
     # 0 0 0 1
     deg = np.deg2rad(deg)
-    return np.mat([[1, 0, 0, 0], [0, math.cos(deg), math.sin(deg), 0], [0, -1*math.sin(deg), math.cos(deg), 0], [0, 0, 0, 1]])
+    return np.mat([[1, 0.0, 0, 0], [0, math.cos(deg), math.sin(deg), 0], [0, -1*math.sin(deg), math.cos(deg), 0], [0, 0.0, 0, 1]])
 
 
 def rotasiY(deg):
@@ -46,7 +46,7 @@ def rotasiY(deg):
     # -sin 0 cos 0
     # 0 0 0 1
     deg = np.deg2rad(deg)
-    return np.mat([[math.cos(deg), 0, math.sin(deg), 0], [0, 1, 0, 0], [-1*math.sin(deg), 0, math.cos(deg), 0], [0, 0, 0, 1]])
+    return np.mat([[math.cos(deg), 0.0, math.sin(deg), 0], [0, 1, 0.0, 0], [-1*math.sin(deg), 0.0, math.cos(deg), 0], [0, 0.0, 0, 1]])
 
 
 def rotasiZ(deg):
@@ -55,73 +55,73 @@ def rotasiZ(deg):
     # 0 0 1 0
     # 0 0 0 1
     deg = np.deg2rad(deg)
-    return np.mat([[math.cos(deg), math.sin(deg), 0, 0], [-1*math.sin(deg), math.cos(deg), 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+    return np.mat([[math.cos(deg), math.sin(deg), 0.0, 0], [-1*math.sin(deg), math.cos(deg), 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
 
 
 def dilate(k):
-    return np.mat([[k, 0, 0, 0], [0, k, 0, 0], [0, 0, k, 0], [0, 0, 0, 1]])
+    return np.mat([[k, 0.0, 0, 0], [0, k, 0.0, 0], [0, 0.0, k, 0], [0, 0.0, 0, 1]])
 
 
 def reflect(a, b=0):  # a bisa sebagai string atau titik
     if (a == 'x'):
-        return np.mat([[1, 0, 0,0], [0, -1, 0,0], [0, 0, 1,0]])
+        return np.mat([[1, 0.0, 0, 0], [0, -1, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     elif (a == 'y'):
-        return np.mat([[-1, 0, 0,0], [0, 1, 0,0], [0, 0, 1,0]])
+        return np.mat([[-1, 0.0, 0, 0], [0, 1, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     elif (a == 'y=x'):
-        return np.mat([[0, 1, 0,0], [1, 0, 0,0], [0, 0, 1,0]])
+        return np.mat([[0, 1, 0.0, 0], [1, 0.0, 0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     elif (a == 'y=-x'):
-        return np.mat([[0, -1, 0,0], [-1, 0, 0,0], [0, 0, 1,0]])
+        return np.mat([[0, -1, 0.0, 0], [-1, 0.0, 0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     else:  # point (a,b)
-        return np.mat([[-1, 0, 0,0], [0, -1, 0,0], [2*a, 2*b, 1,0]])
+        return np.mat([[-1, 0.0, 0, 0], [0, -1, 0.0, 0], [2*a, 2*b, 1, 0], [0, 0.0, 0, 1]])
 
 
 def reflect3D(s):
     if (s == 'xz'):
-        return np.mat([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        return np.mat([[1, 0.0, 0, 0], [0, -1, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     elif (s == 'yz'):
-        return np.mat([[-1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        return np.mat([[-1, 0.0, 0, 0], [0, 1, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     elif (s == 'xy'):
-        return np.mat([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
+        return np.mat([[1, 0.0, 0, 0], [0, 1, 0.0, 0], [0, 0.0, -1, 0], [0, 0.0, 0, 1]])
 
 
 def shear(param, k):
     if(param == 'x'):
-        return([[1, k, 0,0], [0, 1, 0,0], [0, 0, 1,0]])
+        return np.mat([[1, k, 0.0, 0], [0, 1, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     else:  # y
-        return([[1, 0, 0,0], [k, 1, 0,0], [0, 0, 1,0]])
+        return np.mat([[1, 0.0, 0, 0], [k, 1, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
 
 
 def shear3D(param, k):
     if(param == 'x'):
-        return([[1, k, k, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        return np.mat([[1, k, k, 0], [0, 1, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     elif (param == 'y'):  # y
-        return([[1, 0, 0, 0], [k, 1, k, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        return np.mat([[1, 0.0, 0, 0], [k, 1, k, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     else:
-        return([[1, 0, 0, 0], [0, 1, 0, 0], [k, k, 1, 0], [0, 0, 0, 1]])
+        return np.mat([[1, 0.0, 0, 0], [0, 1, 0.0, 0], [k, k, 1, 0], [0, 0.0, 0, 1]])
 
 
 def stretch(param, k):
     if(param == 'x'):
-        return([[1, 0, 0,0], [0, k, 0,0], [0, 0, 1,0]])
+        return np.mat([[1, 0.0, 0, 0], [0, k, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
     else:  # y
-        return([[k, 0, 0,0], [0, 1, 0,0], [0, 0, 1,0]])
+        return np.mat([[k, 0.0, 0, 0], [0, 1, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
 
 
 def stretch3D(param, k):
     if(param == 'x'):  # horizontal
-        return([[1, 0, 0, 0], [0, k, 0, 0], [0, 0, k, 0], [0, 0, 0, 1]])
+        return np.mat([[1, 0.0, 0, 0], [0, k, 0.0, 0], [0, 0.0, k, 0], [0, 0.0, 0, 1]])
     elif (param == 'y'):  # vertical
-        return([[k, 0, 0, 0], [0, 1, 0, 0], [0, 0, k, 0], [0, 0, 0, 1]])
+        return np.mat([[k, 0.0, 0, 0], [0, 1, 0.0, 0], [0, 0.0, k, 0], [0, 0.0, 0, 1]])
     elif (param == 'z'):
-        return([[k, 0, 0, 0], [0, k, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        return np.mat([[k, 0.0, 0, 0], [0, k, 0.0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
 
 
 def custom(a, b, c, d):
-    return np.mat([[a, c, 0], [b, d, 0], [0, 0, 1]])
+    return np.mat([[a, b, 0, 0], [c, d, 0, 0], [0, 0.0, 1, 0], [0, 0.0, 0, 1]])
 
 
-def custom3D(a, b, c, d, e, f):
-    return np.mat([[a, c, e, 0], [b, d, f, 0], [0, 0, 1]])
+def custom3D(a, b, c, d, e, f, g, h, i):
+    return np.mat([[a, b, c, 0], [d, e, f, 0], [g, h, i, 0], [0, 0, 0, 1]])
 
 
 def transformVertex(titik, matriks):
@@ -129,7 +129,7 @@ def transformVertex(titik, matriks):
 
 
 def transformPolygon(listOfVertex, matriks):
-    newList = []
+    newList= []
     for v in listOfVertex:
         newList.append(transformVertex(v, matriks))
     return newList
