@@ -26,7 +26,9 @@ class config:
     #TegakLurus = Proyeksi Vector Cam lalu diputar 90 derajat counterclockwise
     tegakLurusCam3D = np.mat([[camX3D,0,camZ3D,1]]) * rotasiY(90)
     # Nilai warna grid
-    xy, xz,yz = [[randint(0,255)/255 for color in range(3)] for i in range(3)]
+    xy, xz,yz = [[255 for i in range(3)] for i in range(3)]#[[randint(0,255)/255 for color in range(3)] for i in range(3)]
+    # Ukuran grid
+    banyakGrid = 40
     # Navigasi
     navX, navY, navZ, navZoom = 1, 1, 1, 1.1
     navPutar = 5

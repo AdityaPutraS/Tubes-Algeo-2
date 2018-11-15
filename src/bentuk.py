@@ -3,14 +3,6 @@ from animasi import animasi
 import OpenGL.GL as gl
 from random import randint
 
-def lingkaran(x, y, r):
-    hasil = []
-    for i in range(0, 360):
-        hasil.append(
-            np.mat([[x+r*np.cos(i/180 * np.pi), y-r*np.sin(i/180 * np.pi), 1]]))
-    return hasil
-
-
 def gambarPolygon(listOfVertex, is3D,warnaKubus=[],listOfTriangle=[]):
     gl.glColor3f(warnaKubus[0][0],warnaKubus[0][1],warnaKubus[0][2])
     if(is3D):

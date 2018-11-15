@@ -4,7 +4,7 @@ from OpenGL.GLUT import *
 import numpy as np
 from config import config
 from transformasi import *
-
+from ctypes import *
 
 def refresh2d():
     glViewport(0, 0, config.width, config.height)
@@ -117,6 +117,17 @@ def gambarGrid(is3D):
             garis(-i*gridX, config.curMinY, 0, -i*gridX, config.curMaxY, 0)
     glColor3f(1, 1, 1)
 
+def gambarText(x,y,teks,font=GLUT_BITMAP_HELVETICA_12):
+    #Warna teks
+    glColor3f(1,1,1)
+    #Print per char
+    glWindowPos2f(x,config.height-y-12)
+    for c in teks:
+        glutBitmapCharacter(font,c_int(ord(c)))
+
+def bulat(x,presisi):
+    temp = 10**((presisi+1))
+    return int(x*temp)/temp
 
 def draw():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -129,5 +140,12 @@ def draw():
     config.objTest.gambar()
     gambarGrid(config.is3D)
     gambarSumbu(config.is3D)
+    #Gambar koordinat
+    gambarText(0,0,"Koordinat Vektor :")
+    y = 12
+    for i in config.objTest.listVertex:
+        teks = "Koordinat ke-"+str(int(y/12))+" : <"+str(bulat(i.item(0),3))+", "+str(bulat(i.item(1),3))+", "+str(bulat(i.item(2),3))+">"
+        gambarText(0,y,teks)
+        y += 12
     # Sampe sini
     glutSwapBuffers()

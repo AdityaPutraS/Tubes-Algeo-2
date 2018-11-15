@@ -14,7 +14,7 @@ if(__name__ == "__main__"):
     stis3D = input("Apakah anda ingin melakukan transformasi 3D?(Y = Yes, N = No) ")
     is3D = (stis3D == "Y") or (stis3D == "y")
     config.initAwal(is3D)
-    #MultiThreading Boi
+    #MultiThreading
     procInput = threading.Thread(target=ProcInput,args=(config.is3D,))
     procInput.start()
     #GUI
